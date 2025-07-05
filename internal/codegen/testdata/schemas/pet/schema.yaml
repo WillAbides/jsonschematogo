@@ -1,0 +1,15 @@
+"$schema": https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: Pet
+properties:
+  speak:
+    description: The sound the pet makes
+    x-go-type: string
+    type: string
+  age:
+    description: The age of the pet
+    x-go-type: int
+    type: integer
+  name:
+    description: The name of the pet
+    type: string

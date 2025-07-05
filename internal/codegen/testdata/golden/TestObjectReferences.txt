@@ -1,0 +1,12 @@
+type Company struct {
+	Ceo Person `json:"ceo"`
+	Employees []any `json:"employees"`
+	Founded int `json:"founded"`
+	Name string `json:"name"`
+}
+
+type Person struct {
+	Age int `json:"age"`
+	Email string `json:"email"`
+	Name string `json:"name"`
+}

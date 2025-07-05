@@ -1,0 +1,23 @@
+"$schema": https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: Company
+properties:
+  ceo:
+    $ref: "person.yaml"
+    description: The company's CEO
+  employees:
+    type: array
+    items:
+      type: object
+    description: List of employees
+  name:
+    type: string
+    description: The company's name
+  founded:
+    type: integer
+    description: The year the company was founded
+required:
+  - ceo
+  - employees
+  - name
+  - founded

@@ -1,0 +1,14 @@
+"$schema": https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: Person
+properties:
+  name:
+    type: string
+    description: The person's name
+  age:
+    type: integer
+    x-go-type: int
+    description: The person's age
+  email:
+    type: string
+    description: The person's email
