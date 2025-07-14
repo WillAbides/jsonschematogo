@@ -1,0 +1,12 @@
+#!/bin/sh
+#/ script/deadcode helps identify dead Go code. It's not perfect. If something shows up that shouldn't, you can
+#/ add a grep -v to filter it out.
+
+set -e
+
+CDPATH="" cd -- "$(dirname -- "$0")/.."
+
+GOBIN="$(pwd)/bin" go install golang.org/x/tools/cmd/deadcode@latest
+
+bin/deadcode -test ./... || true
+bin/deadcode ./... | grep -v 'internal/golden/' | grep -v '/testrun/' || true

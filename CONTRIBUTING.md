@@ -27,6 +27,11 @@ script/bindown runs bindown with the given arguments
 
 script/cibuild is run by CI to test this project. It can also be run locally.
 
+### deadcode
+
+script/deadcode helps identify dead Go code. It's not perfect. If something shows up that shouldn't, you can
+add a grep -v to filter it out.
+
 ### fmt
 
 script/fmt formats go code and shell scripts.
@@ -35,6 +40,10 @@ script/fmt formats go code and shell scripts.
 
 script/generate runs all generators for this repo.
 `script/generate --check` checks that the generated files are up to date.
+
+### golden
+
+script/test runs tests on the project.
 
 ### jsonschematogo
 

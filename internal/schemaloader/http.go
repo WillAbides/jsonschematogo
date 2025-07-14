@@ -14,11 +14,12 @@ func tlsConfigWithCACert(tlsConfig *tls.Config, cacert string) (*tls.Config, err
 		return tlsConfig, nil
 	}
 	if tlsConfig == nil {
-		tlsConfig = &tls.Config{}
+		tlsConfig = &tls.Config{MinVersion: tls.VersionTLS12}
 	}
 	if tlsConfig.RootCAs == nil {
 		tlsConfig.RootCAs = x509.NewCertPool()
 	}
+
 	pem, err := os.ReadFile(cacert)
 	if err != nil {
 		return nil, err
@@ -35,13 +36,13 @@ func tlsConfigWithInsecure(tlsConfig *tls.Config, insecure bool) *tls.Config {
 		return tlsConfig
 	}
 	if tlsConfig == nil {
-		tlsConfig = &tls.Config{}
+		tlsConfig = &tls.Config{MinVersion: tls.VersionTLS12}
 	}
 	tlsConfig.InsecureSkipVerify = true
 	return tlsConfig
 }
 
-func setupTlsConfig(transport *http.Transport, insecure bool, cacert string) error {
+func setupTLSConfig(transport *http.Transport, insecure bool, cacert string) error {
 	tlsConfig, err := tlsConfigWithCACert(transport.TLSClientConfig, cacert)
 	if err != nil {
 		return fmt.Errorf("setting up TLS config: %w", err)
@@ -51,8 +52,12 @@ func setupTlsConfig(transport *http.Transport, insecure bool, cacert string) err
 }
 
 func newHTTPClient(insecure bool, cacert string) (*http.Client, error) {
-	transport := http.DefaultTransport.(*http.Transport).Clone()
-	err := setupTlsConfig(transport, insecure, cacert)
+	defaultTransport, ok := http.DefaultTransport.(*http.Transport)
+	if !ok {
+		return nil, fmt.Errorf("default transport is not *http.Transport")
+	}
+	transport := defaultTransport.Clone()
+	err := setupTLSConfig(transport, insecure, cacert)
 	if err != nil {
 		return nil, err
 	}

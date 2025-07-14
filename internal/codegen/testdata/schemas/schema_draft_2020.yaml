@@ -1,0 +1,11 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: SchemaDraft2020
+properties:
+  name:
+    type: string
+  age:
+    type: integer
+  email:
+    type: string
+    format: email 

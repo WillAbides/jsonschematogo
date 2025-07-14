@@ -1,0 +1,8 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: EmptyArray
+properties:
+  tags:
+    type: array
+  numbers:
+    type: array 

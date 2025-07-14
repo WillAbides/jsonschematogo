@@ -30,7 +30,7 @@ func AssertGolden(t testing.TB, got []byte, opts *AssertGoldenOptions) bool {
 	if opts == nil {
 		opts = &AssertGoldenOptions{}
 	}
-	goldenfile := cmp.Or(opts.Goldenfile, defaultGoldenfileName(t, opts.GoldenfileSuffix))
+	goldenfile := cmp.Or(opts.Goldenfile, DefaultGoldenfileName(t, opts.GoldenfileSuffix))
 	exists := true
 	_, err := os.Stat(goldenfile)
 	switch {
@@ -51,7 +51,7 @@ func AssertGolden(t testing.TB, got []byte, opts *AssertGoldenOptions) bool {
 			return false
 		}
 	}
-	//nolint:gosec // this is a test helper
+
 	want, err := os.ReadFile(goldenfile)
 	if err != nil {
 		t.Error(err.Error())
@@ -65,7 +65,7 @@ func AssertGolden(t testing.TB, got []byte, opts *AssertGoldenOptions) bool {
 	return true
 }
 
-func defaultGoldenfileName(t testing.TB, suffix string) string {
+func DefaultGoldenfileName(t testing.TB, suffix string) string {
 	if suffix == "" {
 		suffix = ".txt"
 	}

@@ -1,0 +1,36 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: NestedGoType
+properties:
+  user:
+    type: object
+    x-go-type: User
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      email:
+        type: string
+        x-go-type: EmailAddress
+  settings:
+    type: object
+    x-go-type: UserSettings
+    properties:
+      theme:
+        type: string
+        enum: ["light", "dark"]
+      notifications:
+        type: boolean
+  metadata:
+    type: object
+    x-go-type: Metadata
+    properties:
+      created_at:
+        type: string
+        format: date-time
+      tags:
+        type: array
+        items:
+          type: string
+          x-go-type: Tag 

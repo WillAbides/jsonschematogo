@@ -1,0 +1,60 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: ComplexXGoTypeImport
+properties:
+  time_field:
+    type: string
+    x-go-type: time.Time
+    x-go-type-import:
+      path: time
+      name: time
+  duration_field:
+    type: string
+    x-go-type: time.Duration
+    x-go-type-import:
+      path: time
+      name: time
+  uuid_field:
+    type: string
+    x-go-type: uuid.UUID
+    x-go-type-import:
+      path: github.com/google/uuid
+      name: uuid
+  decimal_field:
+    type: string
+    x-go-type: decimal.Decimal
+    x-go-type-import:
+      path: github.com/shopspring/decimal
+      name: decimal
+  nested_with_import:
+    type: object
+    properties:
+      timestamp:
+        type: string
+        x-go-type: time.Time
+        x-go-type-import:
+          path: time
+          name: time
+      amount:
+        type: string
+        x-go-type: decimal.Decimal
+        x-go-type-import:
+          path: github.com/shopspring/decimal
+          name: decimal
+  array_with_imports:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            path: github.com/google/uuid
+            name: uuid
+        created_at:
+          type: string
+          x-go-type: time.Time
+          x-go-type-import:
+            path: time
+            name: time 

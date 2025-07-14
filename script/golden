@@ -1,0 +1,8 @@
+#!/bin/sh
+#/ script/test runs tests on the project.
+
+set -e
+
+CDPATH="" cd -- "$(dirname -- "$0")/.."
+
+UPDATE_GOLDEN=1 go test ./...

@@ -1,0 +1,20 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: ArrayOfPrimitives
+properties:
+  strings:
+    type: array
+    items:
+      type: string
+  ints:
+    type: array
+    items:
+      type: integer
+  floats:
+    type: array
+    items:
+      type: number
+  bools:
+    type: array
+    items:
+      type: boolean 

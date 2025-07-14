@@ -1,8 +1,30 @@
-#!/bin/sh
+#!/bin/bash
 #/ script/test runs tests on the project.
 
 set -e
 
 CDPATH="" cd -- "$(dirname -- "$0")/.."
 
-go test -race -covermode=atomic ./...
+# if args includes -coverprofile, print coverage total
+for arg in "$@"; do
+  if [ -n "$coverprofile_next" ]; then
+    coverprofile="$arg"
+    break
+  fi
+  if [[ $arg != -coverprofile* ]]; then
+    continue
+  fi
+  file=$(echo "$arg" | cut -d'=' -f2)
+  if [ "$file" = "$arg" ]; then
+    coverprofile_next=1
+    continue
+  fi
+  coverprofile="$file"
+  break
+done
+
+go test ./... -race -covermode=atomic -coverpkg="./..." "$@"
+
+if [ -n "$coverprofile" ]; then
+  echo "Coverage: $(go tool cover -func "$coverprofile" | tail -1 | awk '{print $3}')"
+fi
