@@ -1,5 +1,5 @@
 exit_code: 1
 stdout: ""
 stderr: |
-    jsonschematogo: error: failed to load schema testdata/schemas/empty_file.yaml: failed to compile schema: "file:///Users/will.roden/repos/WillAbides/jsonschematogo/internal/codegen/testdata/schemas/empty_file.yaml#" is not valid against metaschema: jsonschema validation failed with 'https://json-schema.org/draft/2020-12/schema#'
+    jsonschematogo: error: failed to load schema testdata/schemas/empty_file.yaml: failed to compile schema: "file://internal/codegen/testdata/schemas/empty_file.yaml#" is not valid against metaschema: jsonschema validation failed with 'https://json-schema.org/draft/2020-12/schema#'
                            - at '': got null, want boolean or object

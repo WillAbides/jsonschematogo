@@ -2,27 +2,38 @@ package codegen_test
 
 import (
 	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 	"github.com/willabides/jsonschematogo/internal/codegen/run/testrun"
-	"github.com/willabides/jsonschematogo/internal/golden"
+	"github.com/willabides/jsonschematogo/internal/testutil"
 	"gopkg.in/yaml.v3"
 )
+
+func normalizeRunResult(result testrun.Result) testrun.Result {
+	stderr := strings.ReplaceAll(result.Stderr, filepath.ToSlash(testutil.RepoRoot())+"/", "")
+	return testrun.Result{
+		ExitCode: result.ExitCode,
+		Stdout:   result.Stdout,
+		Stderr:   stderr,
+	}
+}
 
 func testCodegen(t *testing.T, files ...string) {
 	goOutputFile := t.TempDir() + "/output.go"
 	args := []string{"--output", goOutputFile}
 	args = append(args, files...)
 	runResult := testrun.Run(args...)
-	runResultYaml, err := yaml.Marshal(runResult)
+	runResultYaml, err := yaml.Marshal(normalizeRunResult(runResult))
 	require.NoError(t, err)
-	golden.AssertGolden(t, runResultYaml, &golden.AssertGoldenOptions{
+	testutil.AssertGolden(t, runResultYaml, &testutil.AssertGoldenOptions{
 		GoldenfileSuffix: "/run_result.yaml",
 	})
 	goOutput, err := os.ReadFile(goOutputFile)
 	require.NoError(t, err)
-	golden.AssertGolden(t, goOutput, &golden.AssertGoldenOptions{
+	testutil.AssertGolden(t, goOutput, &testutil.AssertGoldenOptions{
 		GoldenfileSuffix: "/output.go",
 	})
 }
@@ -207,9 +218,9 @@ func testCodegenError(t *testing.T, file string, expectError bool) {
 	args = append(args, file)
 	runResult := testrun.Run(args...)
 
-	runResultYaml, err := yaml.Marshal(runResult)
+	runResultYaml, err := yaml.Marshal(normalizeRunResult(runResult))
 	require.NoError(t, err)
-	golden.AssertGolden(t, runResultYaml, &golden.AssertGoldenOptions{
+	testutil.AssertGolden(t, runResultYaml, &testutil.AssertGoldenOptions{
 		GoldenfileSuffix: "/run_result.yaml",
 	})
 

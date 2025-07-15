@@ -1,4 +1,4 @@
 exit_code: 1
 stdout: ""
 stderr: |
-    jsonschematogo: error: failed to load schema testdata/schemas/invalid_ref.yaml: failed to compile schema: failing loading "file:///Users/will.roden/repos/WillAbides/jsonschematogo/internal/codegen/testdata/schemas/nonexistent_file.yaml": open /Users/will.roden/repos/WillAbides/jsonschematogo/internal/codegen/testdata/schemas/nonexistent_file.yaml: no such file or directory
+    jsonschematogo: error: failed to load schema testdata/schemas/invalid_ref.yaml: failed to compile schema: failing loading "file://internal/codegen/testdata/schemas/nonexistent_file.yaml": open internal/codegen/testdata/schemas/nonexistent_file.yaml: no such file or directory

@@ -1,4 +1,4 @@
 exit_code: 1
 stdout: ""
 stderr: |
-    jsonschematogo: error: failed to load schema testdata/schemas/malformed_yaml.yaml: failed to compile schema: failing loading "file:///Users/will.roden/repos/WillAbides/jsonschematogo/internal/codegen/testdata/schemas/malformed_yaml.yaml": yaml: line 9: did not find expected '-' indicator
+    jsonschematogo: error: failed to load schema testdata/schemas/malformed_yaml.yaml: failed to compile schema: failing loading "file://internal/codegen/testdata/schemas/malformed_yaml.yaml": yaml: line 9: did not find expected '-' indicator
