@@ -1,0 +1,28 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: FieldNamingEdgeCases
+properties:
+  user_id:
+    type: string
+  api_key:
+    type: string
+  http_status_code:
+    type: integer
+  is_active:
+    type: boolean
+  created_at:
+    type: string
+  updated_at:
+    type: string
+  _private_field:
+    type: string
+  field_with_123_numbers:
+    type: string
+  UPPER_CASE_FIELD:
+    type: string
+  camelCaseField:
+    type: string
+  field_with_dash:
+    type: string
+  field_with_dot:
+    type: string 

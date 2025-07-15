@@ -2,11 +2,13 @@ package schemaloader
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,28 +19,28 @@ import (
 
 var _ jsonschema.URLLoader = (*URLLoader)(nil)
 
-type OnLoadFunc func(url string, schema any)
+type OnLoadFunc func(uri string, schema any)
 
 type URLLoader struct {
 	mappingsLoader mappingsLoader
 	onLoad         OnLoadFunc
 }
 
-func (s *URLLoader) Load(url string) (any, error) {
-	schema, err := s.mappingsLoader.Load(url)
+func (s *URLLoader) Load(u string) (any, error) {
+	schema, err := s.mappingsLoader.Load(u)
 	if err != nil {
-		return nil, fmt.Errorf("loading schema %q: %w", url, err)
+		return nil, err
 	}
 	if s.onLoad != nil {
-		s.onLoad(url, schema)
+		s.onLoad(u, schema)
 	}
 	return schema, nil
 }
 
 type Options struct {
 	Mappings map[string]string
-	Insecure bool
 	CACert   string
+	Insecure bool
 }
 
 func New(onLoad OnLoadFunc, opts *Options) (*URLLoader, error) {
@@ -55,6 +57,7 @@ func New(onLoad OnLoadFunc, opts *Options) (*URLLoader, error) {
 			mappings: opts.Mappings,
 			fallback: jsonschema.SchemeURLLoader{
 				"file":  loaderFunc(loadFile),
+				"":      loaderFunc(loadFile),
 				"http":  (*httpLoader)(httpClient),
 				"https": (*httpLoader)(httpClient),
 			},
@@ -64,7 +67,7 @@ func New(onLoad OnLoadFunc, opts *Options) (*URLLoader, error) {
 
 type loaderFunc func(string) (any, error)
 
-func (f loaderFunc) Load(url string) (any, error) { return f(url) }
+func (f loaderFunc) Load(u string) (any, error) { return f(u) }
 
 func loadBytes(data []byte) (any, error) {
 	if json.Valid(data) {
@@ -78,8 +81,22 @@ func loadBytes(data []byte) (any, error) {
 	return v, nil
 }
 
-func loadFile(path string) (any, error) {
-	data, err := os.ReadFile(path)
+func loadFile(u string) (any, error) {
+	parsedURL, err := url.Parse(u)
+	if err != nil {
+		return nil, fmt.Errorf("parsing URL %q: %w", u, err)
+	}
+	if parsedURL.Scheme != "file" && parsedURL.Scheme != "" {
+		return nil, fmt.Errorf("unsupported URL scheme %q for file loading", parsedURL.Scheme)
+	}
+
+	filename := parsedURL.Path
+	if strings.HasPrefix(filename, "/") && os.PathSeparator != '/' {
+		// Convert absolute path to OS-specific path
+		filename = strings.TrimPrefix(filename, "/")
+	}
+
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -88,15 +105,19 @@ func loadFile(path string) (any, error) {
 
 type httpLoader http.Client
 
-func (l *httpLoader) Load(url string) (_ any, errOut error) {
+func (l *httpLoader) Load(u string) (_ any, errOut error) {
 	client := (*http.Client)(l)
-	resp, err := client.Get(url)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, u, http.NoBody)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer func() { errOut = errors.Join(resp.Body.Close()) }()
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("%s returned status code %d", url, resp.StatusCode)
+		return nil, fmt.Errorf("%s returned status code %d", u, resp.StatusCode)
 	}
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -110,11 +131,12 @@ type mappingsLoader struct {
 	fallback jsonschema.URLLoader
 }
 
-func (l *mappingsLoader) Load(url string) (any, error) {
+func (l *mappingsLoader) Load(u string) (any, error) {
 	for prefix, dir := range l.mappings {
-		if suffix, ok := strings.CutPrefix(url, prefix); ok {
+		suffix, ok := strings.CutPrefix(u, prefix)
+		if ok {
 			return loadFile(filepath.Join(dir, suffix))
 		}
 	}
-	return l.fallback.Load(url)
+	return l.fallback.Load(u)
 }

@@ -1,0 +1,9 @@
+exit_code: 1
+stdout: ""
+stderr: |
+    jsonschematogo: error: failed to load schema testdata/schemas/invalid_schema.yaml: failed to compile schema: "file://internal/codegen/testdata/schemas/invalid_schema.yaml#" is not valid against metaschema: jsonschema validation failed with 'https://json-schema.org/draft/2020-12/schema#'
+                           - at '': 'allOf' failed
+                             - at '/properties/invalid_property': 'allOf' failed
+                               - at '/properties/invalid_property/type': 'anyOf' failed
+                                 - at '/properties/invalid_property/type': value must be one of 'array', 'boolean', 'integer', 'null', 'number', 'object', 'string'
+                                 - at '/properties/invalid_property/type': got string, want array

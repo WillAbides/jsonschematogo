@@ -5,10 +5,10 @@ set -e
 
 CDPATH="" cd -- "$(dirname -- "$0")/.."
 
-script/bindown -q install gofumpt shfmt handcrafted
+script/bindown -q install golangci-lint shfmt
 
-git ls-files -o -c --exclude-standard '*.go' |
-  bin/handcrafted |
-  xargs bin/gofumpt -w -extra
+bin/golangci-lint fmt &
 
-bin/shfmt -ci -i 2 -ci -sr -w -s ./script
+bin/shfmt -ci -i 2 -ci -sr -w -s ./script &
+
+wait

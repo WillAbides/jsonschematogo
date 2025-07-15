@@ -1,0 +1,31 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+type: object
+x-go-type: OptionalProperties
+properties:
+  required_string:
+    type: string
+  optional_string:
+    type: string
+  required_int:
+    type: integer
+  optional_int:
+    type: integer
+  required_bool:
+    type: boolean
+  optional_bool:
+    type: boolean
+  required_object:
+    type: object
+    properties:
+      name:
+        type: string
+  optional_object:
+    type: object
+    properties:
+      name:
+        type: string
+required:
+  - required_string
+  - required_int
+  - required_bool
+  - required_object 

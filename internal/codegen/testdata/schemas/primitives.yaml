@@ -1,0 +1,14 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: Primitives
+properties:
+  a_string:
+    type: string
+  an_int:
+    type: integer
+  a_float:
+    type: number
+  a_bool:
+    type: boolean
+  a_null:
+    type: 'null' 

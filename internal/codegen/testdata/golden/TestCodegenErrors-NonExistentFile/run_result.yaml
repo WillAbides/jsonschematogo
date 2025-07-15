@@ -1,0 +1,4 @@
+exit_code: 1
+stdout: ""
+stderr: |
+    jsonschematogo: error: failed to load schema testdata/schemas/nonexistent.yaml: failed to compile schema: failing loading "file://internal/codegen/testdata/schemas/nonexistent.yaml": open internal/codegen/testdata/schemas/nonexistent.yaml: no such file or directory

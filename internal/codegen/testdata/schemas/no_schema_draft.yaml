@@ -1,0 +1,9 @@
+type: object
+x-go-type: NoSchemaDraft
+properties:
+  name:
+    type: string
+  age:
+    type: integer
+  email:
+    type: string 

@@ -49,11 +49,25 @@ bindown dependency add jsonschematogo --source jsonschematogo -y
 <!--- start usage output --->
 
 ```
-Usage: jsonschematogo [flags]
+Usage: jsonschematogo <files> ... [flags]
+
+jsonschematogo converts JSON Schema definitions into Go struct types with proper JSON tags and type
+mapping.
+
+Arguments:
+  <files> ...    JSON/YAML schema files to process
 
 Flags:
-  -h, --help       Show context-sensitive help.
-      --version    Output the jsonschematogo version and exit.
+  -h, --help             Show context-sensitive help.
+  -o, --output=STRING    Output file path (defaults to stdout)
+  -p, --package="gen"    Package name for generated Go code
+  -v, --version          Output the version and exit
+
+Schema Parsing Options:
+  --base-dir=STRING             Base directory for resolving relative schema references
+  --url-map=prefix=directory    URL mappings for schema references
+  --ca-cert=STRING              CA certificate file for HTTPS connections
+  --insecure                    Skip TLS verification for HTTPS connections
 ```
 
 <!--- end usage output --->
@@ -80,6 +94,40 @@ Generate from multiple schemas:
 
 ```bash
 jsonschematogo -o types.go -pkg company person.yaml company.yaml
+```
+
+### Advanced Schema Loading
+
+The generator supports advanced schema loading features:
+
+#### URL Mappings
+
+Map URL prefixes to local directories for better reference resolution:
+
+```bash
+jsonschematogo --url-map="https://example.com/schemas/=./schemas" \
+               --url-map="file:///usr/share/schemas/=./external" \
+               schema.yaml
+```
+
+#### HTTP/HTTPS Support
+
+Load schemas from remote URLs:
+
+```bash
+jsonschematogo --insecure \
+               https://api.example.com/schema.json \
+               local-schema.yaml
+```
+
+#### Base Directory
+
+Set a base directory for resolving relative references:
+
+```bash
+jsonschematogo --base-dir="/path/to/schemas" \
+               --url-map="./=./schemas" \
+               schema.yaml
 ```
 
 Will generate both `Company` and `Person` structs:

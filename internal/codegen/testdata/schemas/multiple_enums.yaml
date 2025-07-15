@@ -1,0 +1,22 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: MultipleEnums
+properties:
+  status:
+    type: string
+    enum: [active, inactive, pending, suspended]
+  priority:
+    type: string
+    enum: [low, medium, high, critical]
+  category:
+    type: string
+    enum: [bug, feature, enhancement, documentation]
+  severity:
+    type: integer
+    enum: [1, 2, 3, 4, 5]
+  type:
+    type: string
+    enum: [user, admin, moderator, guest]
+  state:
+    type: string
+    enum: [draft, published, archived, deleted] 

@@ -1,0 +1,36 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: ArrayGoTypes
+properties:
+  user_ids:
+    type: array
+    items:
+      type: integer
+      x-go-type: UserID
+  email_addresses:
+    type: array
+    items:
+      type: string
+      x-go-type: EmailAddress
+  user_list:
+    type: array
+    x-go-type: UserList
+    items:
+      type: object
+      x-go-type: User
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+  settings_map:
+    type: array
+    x-go-type: SettingsList
+    items:
+      type: object
+      x-go-type: Setting
+      properties:
+        key:
+          type: string
+        value:
+          type: string 

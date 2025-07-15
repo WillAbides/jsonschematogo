@@ -1,0 +1,18 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: MalformedYAML
+properties:
+  name:
+    type: string
+  age:
+    type: integer
+  invalid_yaml:
+    - unclosed list
+    - missing colon
+    type: string
+  another_error:
+    type: object
+    properties:
+      nested:
+        type: string
+        - invalid syntax 

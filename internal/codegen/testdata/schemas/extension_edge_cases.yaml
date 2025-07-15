@@ -1,0 +1,27 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: ExtensionEdgeCases
+properties:
+  with_import_no_name:
+    type: string
+    x-go-type: time.Time
+    x-go-type-import:
+      path: time
+  with_import_with_name:
+    type: string
+    x-go-type: uuid.UUID
+    x-go-type-import:
+      path: github.com/google/uuid
+      name: uuid
+  with_import_empty_path:
+    type: string
+    x-go-type: custom.Type
+    x-go-type-import:
+      path: ""
+      name: custom
+  with_import_empty_name:
+    type: string
+    x-go-type: time.Time
+    x-go-type-import:
+      path: time
+      name: "" 

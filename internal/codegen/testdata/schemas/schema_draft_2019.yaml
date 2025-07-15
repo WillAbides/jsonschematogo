@@ -1,0 +1,32 @@
+$schema: https://json-schema.org/draft/2019-09/schema
+type: object
+x-go-type: SchemaDraft2019
+properties:
+  name:
+    type: string
+  age:
+    type: integer
+  email:
+    type: string
+    format: email
+  tags:
+    type: array
+    items:
+      type: string
+  scores:
+    type: array
+    items:
+      type: number
+  flags:
+    type: array
+    items:
+      type: boolean
+  items:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+        value:
+          type: number 

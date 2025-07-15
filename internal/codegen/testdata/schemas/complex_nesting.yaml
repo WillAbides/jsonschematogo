@@ -1,0 +1,52 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: ComplexNesting
+properties:
+  user:
+    type: object
+    properties:
+      profile:
+        type: object
+        properties:
+          personal:
+            type: object
+            properties:
+              name:
+                type: string
+              age:
+                type: integer
+              preferences:
+                type: object
+                properties:
+                  theme:
+                    type: string
+                    enum: [light, dark, auto]
+                  notifications:
+                    type: object
+                    properties:
+                      email:
+                        type: boolean
+                      push:
+                        type: boolean
+                      sms:
+                        type: boolean
+  organization:
+    type: object
+    properties:
+      departments:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            employees:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  role:
+                    type: string
+                    enum: [manager, employee, intern] 

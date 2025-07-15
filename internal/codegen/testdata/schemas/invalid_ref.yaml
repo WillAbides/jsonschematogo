@@ -1,0 +1,8 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: InvalidRef
+properties:
+  valid_property:
+    type: string
+  invalid_reference:
+    $ref: "nonexistent_file.yaml#/definitions/Type"

@@ -1,0 +1,35 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: PrimitiveGoTypes
+properties:
+  user_id:
+    type: integer
+    x-go-type: UserID
+  email:
+    type: string
+    x-go-type: EmailAddress
+  is_active:
+    type: boolean
+    x-go-type: ActiveStatus
+  score:
+    type: number
+    x-go-type: Score
+  created_at:
+    type: string
+    format: date-time
+    x-go-type: Timestamp
+  tags:
+    type: array
+    items:
+      type: string
+      x-go-type: Tag
+  settings:
+    type: object
+    x-go-type: Settings
+    properties:
+      theme:
+        type: string
+        x-go-type: Theme
+      max_items:
+        type: integer
+        x-go-type: MaxItems 

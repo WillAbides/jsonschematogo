@@ -8,7 +8,7 @@ properties:
   employees:
     type: array
     items:
-      type: object
+      $ref: "person.yaml"
     description: List of employees
   name:
     type: string

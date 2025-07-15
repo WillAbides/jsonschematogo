@@ -1,0 +1,10 @@
+#!/bin/sh
+#/ script/test runs tests on the project.
+
+set -e
+
+CDPATH="" cd -- "$(dirname -- "$0")/.."
+
+find . -type d -name golden -exec rm -rf {} +
+
+UPDATE_GOLDEN=1 go test ./...

@@ -1,0 +1,10 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: NestedEmptyObject
+properties:
+  metadata:
+    type: object
+  config:
+    type: object
+  settings:
+    type: object 
