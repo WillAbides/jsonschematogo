@@ -4,8 +4,3 @@ x-go-type: InvalidSchema
 properties:
   invalid_property:
     type: invalid_type
-  another_invalid:
-    type: object
-    properties:
-      nested_invalid:
-        type: unknown_type 

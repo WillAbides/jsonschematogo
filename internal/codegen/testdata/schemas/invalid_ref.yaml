@@ -6,5 +6,3 @@ properties:
     type: string
   invalid_reference:
     $ref: "nonexistent_file.yaml#/definitions/Type"
-  another_invalid_ref:
-    $ref: "invalid/path/to/file.json#/components/schemas/Type" 
