@@ -38,7 +38,7 @@ how their Go types are generated through custom schema extensions.
 
 ```shell
 bindown template-source add jsonschematogo https://github.com/WillAbides/jsonschematogo/releases/latest/download/bindown.yaml
-bindown dependency add jsonschematogo --source jsonschematogo -y
+bindown dependency add jsonschematogo --source jsonschematogo
 ```
 
 ## Usage
