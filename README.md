@@ -163,6 +163,48 @@ properties:
     x-go-type: UserID  # Custom type
 ```
 
+### `x-go-type-import`
+
+Specify import paths for custom types used with `x-go-type`:
+
+```yaml
+properties:
+  id:
+    type: string
+    x-go-type: googleuuid.UUID
+    x-go-type-import:
+      path: github.com/google/uuid
+      name: googleuuid
+```
+
+This will generate the necessary import statement and use the qualified type name.
+
+### `x-go-name`
+
+Override the generated Go field name for a property:
+
+```yaml
+properties:
+  user_id:
+    type: string
+    x-go-name: UserID
+  api_key:
+    type: string
+    x-go-name: APIKey
+```
+
+### `x-go-type-name`
+
+Override the generated Go type name for a schema:
+
+```yaml
+type: object
+x-go-type-name: CustomTypeName
+properties:
+  field:
+    type: string
+```
+
 ## Architecture
 
 The generator uses a modular architecture:

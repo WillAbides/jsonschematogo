@@ -161,12 +161,6 @@ func (s *Schema) IsObject() bool {
 	return s.Type() == "object"
 }
 
-// GetStringExtension retrieves a string extension value by key.
-func (s *Schema) GetStringExtension(key string) (value string, found bool) {
-	found = getMapValue(s.rawMap, key, &value)
-	return value, found
-}
-
 type GoTypeImport struct {
 	Path string `json:"path"`
 	Name string `json:"name"`
@@ -175,6 +169,8 @@ type GoTypeImport struct {
 type Extensions struct {
 	GoType       *string       `json:"x-go-type"`
 	GoTypeImport *GoTypeImport `json:"x-go-type-import"`
+	GoName       *string       `json:"x-go-name"`
+	GoTypeName   *string       `json:"x-go-type-name"`
 }
 
 func (s *Schema) Extensions() (*Extensions, error) {

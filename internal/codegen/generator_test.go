@@ -132,6 +132,14 @@ func TestCodegen(t *testing.T) {
 			file: "testdata/schemas/extension_edge_cases.yaml",
 		},
 		{
+			name: "XGoName",
+			file: "testdata/schemas/x_go_name.yaml",
+		},
+		{
+			name: "XGoTypeName",
+			file: "testdata/schemas/x_go_type_name.yaml",
+		},
+		{
 			name: "SchemaDraft2019",
 			file: "testdata/schemas/schema_draft_2019.yaml",
 		},
