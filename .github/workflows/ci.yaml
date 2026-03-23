@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: WillAbides/setup-go-faster@v1
         id: setup-go
         with:
@@ -29,8 +27,6 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: WillAbides/setup-go-faster@v1
         id: setup-go
         with:
@@ -47,8 +43,6 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: WillAbides/setup-go-faster@v1
         id: setup-go
         with:
