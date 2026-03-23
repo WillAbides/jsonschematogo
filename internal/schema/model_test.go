@@ -19,22 +19,6 @@ func TestSchema_IsObject(t *testing.T) {
 	assert.True(t, schema.IsObject())
 }
 
-func TestSchema_GetStringExtension(t *testing.T) {
-	schema := &Schema{
-		rawMap: map[string]any{
-			"x-go-type": "Person",
-			"x-number":  42,
-		},
-	}
-
-	value, exists := schema.GetStringExtension("x-go-type")
-	assert.True(t, exists)
-	assert.Equal(t, "Person", value)
-
-	_, exists = schema.GetStringExtension("x-number")
-	assert.False(t, exists)
-}
-
 func TestSchema_HasProperties(t *testing.T) {
 	schema, err := LoadSchema("../codegen/testdata/schemas/company/company.yaml")
 	require.NoError(t, err)

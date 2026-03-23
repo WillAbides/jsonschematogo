@@ -1,0 +1,12 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: XGoNameTest
+properties:
+  user_id:
+    type: string
+    x-go-name: UserIDOverride
+  api_key:
+    type: string
+    x-go-name: APIKeyOverride
+  normal_field:
+    type: string

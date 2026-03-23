@@ -41,7 +41,7 @@ func GenerateGoCode(w io.Writer, sch *schema.Schema, opts *Options) error {
 		opts:           *opts,
 	}
 
-	err := g.generateStruct(sch, getStructName(sch))
+	err := g.generateStruct(sch, "")
 	if err != nil {
 		return fmt.Errorf("generate struct: %w", err)
 	}
@@ -55,6 +55,13 @@ func (g *generator) generateStruct(sch *schema.Schema, structName string) error 
 	if _, ok := g.seenSignatures[signature]; ok {
 		return nil
 	}
+	if structName == "" {
+		var err error
+		structName, err = getStructName(sch)
+		if err != nil {
+			return err
+		}
+	}
 	g.seenSignatures[signature] = structName
 
 	type field struct {
@@ -64,10 +71,13 @@ func (g *generator) generateStruct(sch *schema.Schema, structName string) error 
 
 	var fields []field
 	for propName, prop := range sch.OrderedProperties() {
+		propExt, err := prop.Extensions()
+		if err != nil {
+			return err
+		}
 		refSchema := prop.RefSchema()
 		if refSchema != nil {
-			refName := getStructName(refSchema)
-			err := g.generateStruct(refSchema, refName)
+			err = g.generateStruct(refSchema, "")
 			if err != nil {
 				return err
 			}
@@ -75,14 +85,17 @@ func (g *generator) generateStruct(sch *schema.Schema, structName string) error 
 
 		if prop.Type() == "object" && prop.HasProperties() {
 			inlineName := structName + capitalizeFirst(propName) + "Object"
-			err := g.generateStruct(prop, inlineName)
+			if propExt.GoTypeName != nil {
+				inlineName = *propExt.GoTypeName
+			}
+			err = g.generateStruct(prop, inlineName)
 			if err != nil {
 				return err
 			}
 		}
 
 		if prop.Type() == "array" {
-			err := g.handleArrayPropertyStructs(prop, structName, propName)
+			err = g.handleArrayPropertyStructs(prop, structName, propName)
 			if err != nil {
 				return err
 			}
@@ -113,15 +126,21 @@ func (g *generator) handleArrayPropertyStructs(prop *schema.Schema, structName, 
 	}
 	refSchema := items.RefSchema()
 	if refSchema != nil {
-		refName := getStructName(refSchema)
-		err := g.generateStruct(refSchema, refName)
+		err := g.generateStruct(refSchema, "")
 		if err != nil {
 			return err
 		}
 	}
 	if items.Type() == "object" && items.HasProperties() {
 		inlineName := structName + capitalizeFirst(propName) + "ItemObject"
-		err := g.generateStruct(items, inlineName)
+		ext, err := items.Extensions()
+		if err != nil {
+			return err
+		}
+		if ext.GoTypeName != nil {
+			inlineName = *ext.GoTypeName
+		}
+		err = g.generateStruct(items, inlineName)
 		if err != nil {
 			return err
 		}
@@ -157,6 +176,10 @@ func structSignature(sch *schema.Schema) string {
 // generateField generates a Go struct field for a property.
 func (g *generator) generateField(name, parentName string, prop, parent *schema.Schema) (*jen.Statement, error) {
 	fieldName := toGoFieldName(name)
+	ext, err := prop.Extensions()
+	if err == nil && ext.GoName != nil {
+		fieldName = *ext.GoName
+	}
 	isRequired := parent.IsPropertyRequired(name)
 
 	typeExpr, err := g.goTypeExpr(prop, parentName, name, isRequired)
@@ -206,32 +229,36 @@ func (g *generator) getXGoTypeExpr(prop *schema.Schema, isRequired bool) (jen.Co
 }
 
 // getArrayItemExpr handles array item type expressions.
-func getArrayItemExpr(items *schema.Schema, parentName, propName string) jen.Code {
-	var itemsGoType string
-	var exists bool
-	itemsGoType, exists = items.GetStringExtension("x-go-type")
+func getArrayItemExpr(items *schema.Schema, parentName, propName string) (jen.Code, error) {
+	ext, err := items.Extensions()
+	if err != nil {
+		return nil, err
+	}
 	switch {
-	case exists:
+	case ext.GoType != nil:
 		// Check if array items have import extension
 		if importPath, _, hasImport := items.GetImportExtension(); hasImport {
 			// Extract just the type name from the full qualified name
-			typeName := itemsGoType
-			if strings.Contains(itemsGoType, ".") {
-				parts := strings.Split(itemsGoType, ".")
+			typeName := *ext.GoType
+			if strings.Contains(*ext.GoType, ".") {
+				parts := strings.Split(*ext.GoType, ".")
 				typeName = parts[len(parts)-1]
 			}
-			return jen.Qual(importPath, typeName)
+			return jen.Qual(importPath, typeName), nil
 		}
-		return jen.Id(itemsGoType)
+		return jen.Id(*ext.GoType), nil
 	case items.Ref() != "":
-		return jen.Id(refTypeName(items.Ref()))
+		return jen.Id(refTypeName(items.Ref())), nil
 	case items.Type() == "object" && items.HasProperties():
 		inlineName := parentName + capitalizeFirst(propName) + "ItemObject"
-		return jen.Id(inlineName)
+		if ext.GoTypeName != nil {
+			inlineName = *ext.GoTypeName
+		}
+		return jen.Id(inlineName), nil
 	case items.Type() == "object":
-		return jen.Map(jen.String()).Interface()
+		return jen.Map(jen.String()).Interface(), nil
 	default:
-		return jen.Id(getPrimitiveGoType(items.Type()))
+		return jen.Id(getPrimitiveGoType(items.Type())), nil
 	}
 }
 
@@ -259,18 +286,16 @@ func (g *generator) goTypeExpr(prop *schema.Schema, parentName, propName string,
 		if items == nil {
 			return jen.Index().Interface(), nil
 		}
-		return jen.Index().Add(getArrayItemExpr(items, parentName, propName)), nil
+		var itemExpr jen.Code
+		itemExpr, err = getArrayItemExpr(items, parentName, propName)
+		if err != nil {
+			return nil, err
+		}
+		return jen.Index().Add(itemExpr), nil
 	}
 
 	if prop.Type() == "object" {
-		if prop.HasProperties() {
-			inlineName := parentName + capitalizeFirst(propName) + "Object"
-			if !isRequired {
-				return jen.Op("*").Id(inlineName), nil
-			}
-			return jen.Id(inlineName), nil
-		}
-		return jen.Map(jen.String()).Interface(), nil
+		return g.goTypeObjectExpr(prop, parentName, propName, isRequired)
 	}
 
 	typeName := getPrimitiveGoType(prop.Type())
@@ -281,6 +306,28 @@ func (g *generator) goTypeExpr(prop *schema.Schema, parentName, propName string,
 		return jen.Op("*").Id(typeName), nil
 	}
 	return jen.Id(typeName), nil
+}
+
+func (g *generator) goTypeObjectExpr(
+	prop *schema.Schema,
+	parentName, propName string,
+	isRequired bool,
+) (jen.Code, error) {
+	if !prop.HasProperties() {
+		return jen.Map(jen.String()).Interface(), nil
+	}
+	inlineName := parentName + capitalizeFirst(propName) + "Object"
+	ext, err := prop.Extensions()
+	if err != nil {
+		return nil, err
+	}
+	if ext.GoTypeName != nil {
+		inlineName = *ext.GoTypeName
+	}
+	if !isRequired {
+		return jen.Op("*").Id(inlineName), nil
+	}
+	return jen.Id(inlineName), nil
 }
 
 func refTypeName(ref string) string {
@@ -295,10 +342,17 @@ func refTypeName(ref string) string {
 	return "any"
 }
 
-// getStructName gets the struct name from x-go-type extension or infers it.
-func getStructName(sch *schema.Schema) string {
-	if goType, exists := sch.GetStringExtension("x-go-type"); exists {
-		return goType
+// getStructName gets the struct name from x-go-type-name, x-go-type extension or infers it.
+func getStructName(sch *schema.Schema) (string, error) {
+	ext, err := sch.Extensions()
+	if err != nil {
+		return "", err
+	}
+	if ext.GoTypeName != nil {
+		return *ext.GoTypeName, nil
+	}
+	if ext.GoType != nil {
+		return *ext.GoType, nil
 	}
 
 	// Infer from location or use a default
@@ -311,11 +365,11 @@ func getStructName(sch *schema.Schema) string {
 			name = strings.TrimSuffix(name, ".yaml")
 			name = strings.TrimSuffix(name, ".yml")
 			name = strings.TrimSuffix(name, ".json")
-			return capitalizeFirst(name)
+			return capitalizeFirst(name), nil
 		}
 	}
 
-	return "Object"
+	return "Object", nil
 }
 
 // getPrimitiveGoType maps JSON Schema primitive types to Go types.
