@@ -1,0 +1,19 @@
+$schema: http://json-schema.org/draft-07/schema#
+type: object
+x-go-type: LegacyDefinitions
+definitions:
+  legacy_id:
+    type: integer
+  legacy_object:
+    type: object
+    properties:
+      value:
+        type: string
+properties:
+  id:
+    $ref: "#/definitions/legacy_id"
+  object:
+    $ref: "#/definitions/legacy_object"
+required:
+  - id
+  - object

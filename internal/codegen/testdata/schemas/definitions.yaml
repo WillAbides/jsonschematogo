@@ -1,0 +1,65 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+x-go-type: Definitions
+$defs:
+  customer:
+    type: object
+    x-go-type-name: Client
+    properties:
+      name:
+        type: string
+  supplier:
+    type: object
+    properties:
+      name:
+        type: string
+  address:
+    type: object
+    properties:
+      city:
+        type: string
+  user_id:
+    type: string
+    x-go-type-name: UserID
+  labels:
+    type: array
+    items:
+      type: string
+  contacts:
+    type: array
+    items:
+      $ref: "#/$defs/customer"
+  metadata:
+    type: object
+  customer_alias:
+    $ref: "#/$defs/customer"
+  anything: true
+properties:
+  customer:
+    $ref: "#/$defs/customer"
+  supplier:
+    $ref: "#/$defs/supplier"
+  address:
+    $ref: "#/$defs/address"
+  user_id:
+    $ref: "#/$defs/user_id"
+  labels:
+    $ref: "#/$defs/labels"
+  contacts:
+    $ref: "#/$defs/contacts"
+  metadata:
+    $ref: "#/$defs/metadata"
+  customer_alias:
+    $ref: "#/$defs/customer_alias"
+  anything:
+    $ref: "#/$defs/anything"
+required:
+  - customer
+  - supplier
+  - address
+  - user_id
+  - labels
+  - contacts
+  - metadata
+  - customer_alias
+  - anything

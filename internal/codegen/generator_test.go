@@ -120,6 +120,14 @@ func TestCodegen(t *testing.T) {
 			file: "testdata/schemas/array_with_ref_items.yaml",
 		},
 		{
+			name: "Definitions",
+			file: "testdata/schemas/definitions.yaml",
+		},
+		{
+			name: "LegacyDefinitions",
+			file: "testdata/schemas/legacy_definitions.yaml",
+		},
+		{
 			name: "ObjectWithNoProperties",
 			file: "testdata/schemas/object_with_no_properties.yaml",
 		},
