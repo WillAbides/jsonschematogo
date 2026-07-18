@@ -12,8 +12,16 @@ import (
 
 // Schema represents a JSON Schema in a language-agnostic way.
 type Schema struct {
-	schema *jsonschema.Schema
-	rawMap map[string]any
+	schema      *jsonschema.Schema
+	rawMap      map[string]any
+	definitions []NamedSchema
+}
+
+// NamedSchema is a reusable schema declared in $defs or definitions.
+type NamedSchema struct {
+	Name   string
+	Ref    string
+	Schema *Schema
 }
 
 // Type returns the schema type.
@@ -120,6 +128,19 @@ func orderedMap[K cmp.Ordered, V any](m map[K]V) iter.Seq2[K, V] {
 
 func (s *Schema) OrderedProperties() iter.Seq2[string, *Schema] {
 	return orderedMap(s.Properties())
+}
+
+// OrderedDefinitions returns the schema definitions sorted by name and reference.
+func (s *Schema) OrderedDefinitions() iter.Seq[NamedSchema] {
+	definitions := slices.Clone(s.definitions)
+	slices.SortFunc(definitions, func(a, b NamedSchema) int {
+		nameOrder := cmp.Compare(a.Name, b.Name)
+		if nameOrder != 0 {
+			return nameOrder
+		}
+		return cmp.Compare(a.Ref, b.Ref)
+	})
+	return slices.Values(definitions)
 }
 
 // Properties returns the schema properties.
