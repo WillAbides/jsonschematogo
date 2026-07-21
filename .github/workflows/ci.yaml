@@ -102,7 +102,7 @@ jobs:
           mkdir -p "$(dirname "$CONFIG_FILE")"
           echo '{}' > "$CONFIG_FILE"
           yes '' | script/bindown dependency add-by-github-release \
-            "$GITHUB_REPOSITORY" \
+            "$GITHUB_REPOSITORY@$RELEASE_TAG" \
             --configfile "$CONFIG_FILE" \
             --experimental
           bin/gh release upload "$RELEASE_TAG" "$CONFIG_FILE"
