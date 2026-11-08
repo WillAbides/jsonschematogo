@@ -182,7 +182,7 @@ func (g *generator) generateStructWithOptions(
 		}
 
 		if prop.Type() == "object" && prop.HasProperties() {
-			inlineName := structName + capitalizeFirst(propName) + "Object"
+			inlineName := structName + toGoFieldName(propName) + "Object"
 			if propExt.GoTypeName != nil {
 				inlineName = *propExt.GoTypeName
 			}
@@ -233,7 +233,7 @@ func (g *generator) generateArrayItemTypes(items *schema.Schema, structName, pro
 		}
 	}
 	if items.Type() == "object" && items.HasProperties() {
-		inlineName := structName + capitalizeFirst(propName) + "ItemObject"
+		inlineName := structName + toGoFieldName(propName) + "ItemObject"
 		ext, err := items.Extensions()
 		if err != nil {
 			return err
@@ -359,7 +359,7 @@ func (g *generator) getArrayItemExpr(
 	case items.Ref() != "":
 		return jen.Id(g.refTypeName(items.Ref())), nil
 	case items.Type() == "object" && items.HasProperties():
-		inlineName := parentName + capitalizeFirst(propName) + "ItemObject"
+		inlineName := parentName + toGoFieldName(propName) + "ItemObject"
 		if ext.GoTypeName != nil {
 			inlineName = *ext.GoTypeName
 		}
@@ -425,7 +425,7 @@ func (g *generator) goTypeObjectExpr(
 	if !prop.HasProperties() {
 		return jen.Map(jen.String()).Interface(), nil
 	}
-	inlineName := parentName + capitalizeFirst(propName) + "Object"
+	inlineName := parentName + toGoFieldName(propName) + "Object"
 	ext, err := prop.Extensions()
 	if err != nil {
 		return nil, err
@@ -449,7 +449,7 @@ func (g *generator) refTypeName(ref string) string {
 		name = strings.TrimSuffix(name, ".yaml")
 		name = strings.TrimSuffix(name, ".yml")
 		name = strings.TrimSuffix(name, ".json")
-		return capitalizeFirst(name)
+		return toGoFieldName(name)
 	}
 	return "any"
 }
@@ -501,7 +501,7 @@ func getStructName(sch *schema.Schema) (string, error) {
 			name = strings.TrimSuffix(name, ".yaml")
 			name = strings.TrimSuffix(name, ".yml")
 			name = strings.TrimSuffix(name, ".json")
-			return capitalizeFirst(name), nil
+			return toGoFieldName(name), nil
 		}
 	}
 
@@ -545,12 +545,10 @@ func toGoFieldName(s string) string {
 		return ""
 	}
 
-	// Split by underscores and capitalize each part
-	parts := strings.Split(s, "_")
+	parts := strings.FieldsFunc(s, func(r rune) bool {
+		return r == '_' || r == '-' || r == '.'
+	})
 	for i, part := range parts {
-		if part == "" {
-			continue
-		}
 		parts[i] = capitalizeFirst(part)
 	}
 
