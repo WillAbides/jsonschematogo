@@ -2,20 +2,20 @@
 
 package gen
 
-type MixedTypeArrayMixed_arrayItemObject struct {
+type MixedTypeArrayMixedArrayItemObject struct {
 	Data *string `json:"data"`
 	Type *string `json:"type"`
 }
 
-type MixedTypeArrayObject_arrayItemObject struct {
+type MixedTypeArrayObjectArrayItemObject struct {
 	Id    *string  `json:"id"`
 	Value *float64 `json:"value"`
 }
 
 type MixedTypeArray struct {
-	BooleanArray []bool                                 `json:"boolean_array"`
-	MixedArray   []MixedTypeArrayMixed_arrayItemObject  `json:"mixed_array"`
-	NumberArray  []float64                              `json:"number_array"`
-	ObjectArray  []MixedTypeArrayObject_arrayItemObject `json:"object_array"`
-	StringArray  []string                               `json:"string_array"`
+	BooleanArray []bool                                `json:"boolean_array"`
+	MixedArray   []MixedTypeArrayMixedArrayItemObject  `json:"mixed_array"`
+	NumberArray  []float64                             `json:"number_array"`
+	ObjectArray  []MixedTypeArrayObjectArrayItemObject `json:"object_array"`
+	StringArray  []string                              `json:"string_array"`
 }

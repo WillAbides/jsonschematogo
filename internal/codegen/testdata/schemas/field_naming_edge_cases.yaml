@@ -24,5 +24,9 @@ properties:
     type: string
   field_with_dash:
     type: string
+  field-with-actual-dash:
+    type: string
   field_with_dot:
-    type: string 
+    type: string
+  field.with.actual.dot:
+    type: string

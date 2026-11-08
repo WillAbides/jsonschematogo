@@ -1,0 +1,15 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  nested-object:
+    type: object
+    properties:
+      sub-field:
+        type: string
+  item-list:
+    type: array
+    items:
+      type: object
+      properties:
+        item-id:
+          type: integer

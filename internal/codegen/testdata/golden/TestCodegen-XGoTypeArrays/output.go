@@ -2,12 +2,12 @@
 
 package gen
 
-type ArrayGoTypesSettings_mapItemObject struct {
+type ArrayGoTypesSettingsMapItemObject struct {
 	Key   *string `json:"key"`
 	Value *string `json:"value"`
 }
 
-type ArrayGoTypesUser_listItemObject struct {
+type ArrayGoTypesUserListItemObject struct {
 	Id   *int    `json:"id"`
 	Name *string `json:"name"`
 }

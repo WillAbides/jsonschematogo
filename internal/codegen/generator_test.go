@@ -163,6 +163,10 @@ func TestCodegen(t *testing.T) {
 			name: "NoSchemaDraft",
 			file: "testdata/schemas/no_schema_draft.yaml",
 		},
+		{
+			name: "HyphenFileName",
+			file: "testdata/schemas/hyphen-file-name.yaml",
+		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			testCodegen(t, test.file)

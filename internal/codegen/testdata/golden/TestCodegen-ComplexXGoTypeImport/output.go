@@ -8,21 +8,21 @@ import (
 	time "time"
 )
 
-type ComplexXGoTypeImportArray_with_importsItemObject struct {
+type ComplexXGoTypeImportArrayWithImportsItemObject struct {
 	CreatedAt *time.Time `json:"created_at"`
 	Id        *uuid.UUID `json:"id"`
 }
 
-type ComplexXGoTypeImportNested_with_importObject struct {
+type ComplexXGoTypeImportNestedWithImportObject struct {
 	Amount    *decimal.Decimal `json:"amount"`
 	Timestamp *time.Time       `json:"timestamp"`
 }
 
 type ComplexXGoTypeImport struct {
-	ArrayWithImports []ComplexXGoTypeImportArray_with_importsItemObject `json:"array_with_imports"`
-	DecimalField     *decimal.Decimal                                   `json:"decimal_field"`
-	DurationField    *time.Duration                                     `json:"duration_field"`
-	NestedWithImport *ComplexXGoTypeImportNested_with_importObject      `json:"nested_with_import"`
-	TimeField        *time.Time                                         `json:"time_field"`
-	UuidField        *uuid.UUID                                         `json:"uuid_field"`
+	ArrayWithImports []ComplexXGoTypeImportArrayWithImportsItemObject `json:"array_with_imports"`
+	DecimalField     *decimal.Decimal                                 `json:"decimal_field"`
+	DurationField    *time.Duration                                   `json:"duration_field"`
+	NestedWithImport *ComplexXGoTypeImportNestedWithImportObject      `json:"nested_with_import"`
+	TimeField        *time.Time                                       `json:"time_field"`
+	UuidField        *uuid.UUID                                       `json:"uuid_field"`
 }

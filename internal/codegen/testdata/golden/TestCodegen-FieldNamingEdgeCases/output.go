@@ -8,6 +8,8 @@ type FieldNamingEdgeCases struct {
 	ApiKey              *string `json:"api_key"`
 	CamelCaseField      *string `json:"camelCaseField"`
 	CreatedAt           *string `json:"created_at"`
+	FieldWithActualDash *string `json:"field-with-actual-dash"`
+	FieldWithActualDot  *string `json:"field.with.actual.dot"`
 	FieldWith123Numbers *string `json:"field_with_123_numbers"`
 	FieldWithDash       *string `json:"field_with_dash"`
 	FieldWithDot        *string `json:"field_with_dot"`
