@@ -13,6 +13,8 @@ import (
 // Options for Go code generation.
 type Options struct {
 	PackageName string
+	// YAMLTags adds YAML tags alongside JSON tags using the schema property names.
+	YAMLTags bool
 	// Schemas is a map of URI to *schema.Schema for $ref resolution
 	Schemas map[string]*schema.Schema
 }
@@ -292,7 +294,11 @@ func (g *generator) generateField(name, parentName string, prop, parent *schema.
 	if err != nil {
 		return nil, err
 	}
-	return jen.Id(fieldName).Add(typeExpr).Tag(map[string]string{"json": name}), nil
+	tags := map[string]string{"json": name}
+	if g.opts.YAMLTags {
+		tags["yaml"] = name
+	}
+	return jen.Id(fieldName).Add(typeExpr).Tag(tags), nil
 }
 
 // isBuiltinType checks if a type name is a built-in type.

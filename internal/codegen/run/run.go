@@ -17,6 +17,7 @@ type Cmd struct {
 	Files    []string          `kong:"arg,help='JSON/YAML schema files to process'"`
 	Output   string            `kong:"short=o,help='Output file path (defaults to stdout)'"`
 	Package  string            `kong:"short=p,default='gen',help='Package name for generated Go code'"`
+	YAMLTags bool              `kong:"help='Add YAML tags alongside JSON tags'"`
 	BaseDir  string            `kong:"group=parsing,help='Base directory for resolving relative schema references'"`
 	URLMap   map[string]string `kong:"placeholder='prefix=directory',group=parsing,help='URL mappings for schema references'"`
 	CACert   string            `kong:"group=parsing,help='CA certificate file for HTTPS connections'"`
@@ -41,6 +42,7 @@ func (cli *Cmd) Run(k *kong.Context) error {
 		sch := schemas[file]
 		opts := &codegen.Options{
 			PackageName: cli.Package,
+			YAMLTags:    cli.YAMLTags,
 			Schemas:     schemas,
 		}
 		genErr := codegen.GenerateGoCode(&output, sch, opts)
