@@ -61,6 +61,7 @@ Flags:
   -h, --help             Show context-sensitive help.
   -o, --output=STRING    Output file path (defaults to stdout)
   -p, --package="gen"    Package name for generated Go code
+      --yaml-tags        Add YAML tags alongside JSON tags
   -v, --version          Output the version and exit
 
 Schema Parsing Options:
@@ -71,6 +72,23 @@ Schema Parsing Options:
 ```
 
 <!--- end usage output --->
+
+### YAML Tags
+
+Use `--yaml-tags` to add YAML struct tags alongside JSON tags:
+
+```shell
+jsonschematogo --yaml-tags -o types.go schema.yaml
+```
+
+Both tags use the original schema property name, even when `x-go-name`
+overrides the Go field name:
+
+```go
+UserID *string `json:"user_id" yaml:"user_id"`
+```
+
+By default, only JSON tags are generated.
 
 ### Schema References
 

@@ -174,6 +174,30 @@ func TestCodegen(t *testing.T) {
 	}
 }
 
+func TestCodegenYAMLTags(t *testing.T) {
+	for _, test := range []struct {
+		name string
+		file string
+	}{
+		{
+			name: "References",
+			file: "testdata/schemas/company/company.yaml",
+		},
+		{
+			name: "NestedObjects",
+			file: "testdata/schemas/complex_nesting.yaml",
+		},
+		{
+			name: "FieldNameOverrides",
+			file: "testdata/schemas/x_go_name.yaml",
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			testCodegen(t, "--yaml-tags", test.file)
+		})
+	}
+}
+
 func TestCodegenErrors(t *testing.T) {
 	for _, test := range []struct {
 		name        string
